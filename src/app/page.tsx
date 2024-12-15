@@ -1,100 +1,206 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+
+export default function WaitlistPage() {
+  const [waitlistCount, setWaitlistCount] = useState(0); // State to track waitlist count
+  const [isAnimating, setIsAnimating] = useState(false); // Animation state
+
+  // ROI Calculator state
+  const [investment, setInvestment] = useState(5000); // Default investment amount
+  const profitRange = {
+    min: (investment * 7) / 100, // 7% profit
+    max: (investment * 12) / 100, // 12% profit
+  };
+
+  const handleJoinWaitlist = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Trigger animation
+    setIsAnimating(true);
+
+    // Simulate adding to the waitlist
+    setTimeout(() => {
+      setWaitlistCount((prevCount) => prevCount + 1); // Increment waitlist count
+      setIsAnimating(false);
+    }, 300); // Match the animation duration
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleInvestmentChange = (value: number) => {
+    setInvestment(value);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* Logo */}
+      <div className="relative top-0 left-10 flex items-center">
+        <img src="/invoicexlogotrans.png" alt="Logo" className="h-44 w-auto" />
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      {/* Main Content */}
+      <div className="flex-1 text-center">
+        {/* Header */}
+        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+          Instantly unlock your invoice value
+        </h1>
+        <p className="text-gray-400 text-lg mb-8">
+          Join the future of invoice financing
+        </p>
+
+        {/* Form */}
+        <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md mx-auto mb-10">
+          <form onSubmit={handleJoinWaitlist}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              required
+              className="w-full p-3 mb-4 rounded bg-gray-800 text-white placeholder-gray-500"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              required
+              className="w-full p-3 mb-4 rounded bg-gray-800 text-white placeholder-gray-500"
+            />
+            <select
+              name="type"
+              defaultValue=""
+              required
+              className="w-full p-3 mb-4 rounded bg-gray-800 text-white"
+            >
+              <option value="" disabled>
+                Investor or SME?
+              </option>
+              <option value="Investor">Investor</option>
+              <option value="SME">SME</option>
+            </select>
+
+            <button
+              type="submit"
+              className="w-full bg-purple-600 p-3 rounded text-white font-semibold hover:bg-purple-700"
+            >
+              Join Waitlist
+            </button>
+          </form>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Waitlist Count */}
+        <div className="mt-8 text-center">
+          <p className="text-lg text-gray-400 mb-2">Current waitlist count:</p>
+          <div
+            className={`text-4xl font-bold ${
+              isAnimating ? "animate-pulse" : ""
+            }`}
+          >
+            {waitlistCount}
+          </div>
+        </div>
+      </div>
+
+      {/* Cards Section */}
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Card 1 */}
+          <div className="bg-transparent border border-white p-6 rounded-lg hover:scale-105 hover:border-purple-600 transition-transform duration-300 h-full flex flex-col">
+            <h2 className="text-xl font-bold mb-4 flex items-center">
+              📄 What is Invoice Discounting?
+            </h2>
+            <p className="flex-grow">
+              Invoice discounting is a financial solution that allows businesses
+              to receive immediate cash against their unpaid invoices, improving
+              cash flow without waiting for customer payments.
+            </p>
+          </div>
+          {/* Card 2 */}
+          <div className="bg-transparent border border-white p-6 rounded-lg hover:scale-105 hover:border-purple-600 transition-transform duration-300 h-full flex flex-col">
+            <h2 className="text-xl font-bold mb-4 flex items-center">
+              📉 The Problem
+            </h2>
+            <p className="flex-grow">
+              Long payment terms and delayed payments create cash flow gaps that
+              can stifle business growth, limit opportunities, and strain
+              supplier relationships.
+            </p>
+          </div>
+          {/* Card 3 */}
+          <div className="bg-transparent border border-white p-6 rounded-lg hover:scale-105 hover:border-purple-600 transition-transform duration-300 h-full flex flex-col">
+            <h2 className="text-xl font-bold mb-4 flex items-center">
+              🤖 Our Solution
+            </h2>
+            <p className="flex-grow">
+              InvoiceX provides an AI-powered platform that instantly evaluates
+              and finances invoices, offering competitive rates and a seamless
+              digital experience for businesses of all sizes.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* ROI Calculator */}
+      <div className="py-10 text-center">
+        <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
+          <h2 className="text-2xl font-bold mb-6">📈 Return on Investment Calculator</h2>
+          <p className="text-gray-400 mb-4">
+            Calculate your potential returns in 6 months.
+          </p>
+
+          {/* Investment Input */}
+          <div className="mb-6">
+            <label htmlFor="investment" className="block text-white font-semibold mb-2">
+              How much do you want to invest?
+            </label>
+            <input
+              type="range"
+              id="investment"
+              min="1000"
+              max="100000"
+              step="1000"
+              value={investment}
+              onChange={(e) => handleInvestmentChange(Number(e.target.value))}
+              className="w-full mb-4"
+            />
+            <input
+              type="number"
+              value={investment}
+              onChange={(e) => handleInvestmentChange(Number(e.target.value))}
+              className="w-full p-3 rounded bg-gray-800 text-white placeholder-gray-500 text-center"
+            />
+          </div>
+
+          {/* Profit Display */}
+          <div className="text-white">
+            <p className="text-lg">
+              Based on your investment, you'll earn between:
+            </p>
+            <p className="text-2xl font-bold mt-2">
+              ${profitRange.min.toFixed(2)} - ${profitRange.max.toFixed(2)}
+            </p>
+            <p className="text-lg text-gray-400 mt-2">
+              in just 6 months.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-white text-black text-center py-10">
+        <h2 className="text-2xl font-bold mb-6">Ready to Transform Your Cash Flow?</h2>
+        <p className="text-lg text-gray-600 mb-6">
+          Join thousands of businesses already benefiting from instant invoice
+          financing.
+        </p>
+        <button
+          onClick={scrollToTop}
+          className="bg-purple-600 text-white p-4 rounded font-semibold hover:bg-purple-700 transition-transform duration-300 inline-flex items-center gap-2"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          Join the Waitlist <span className="text-2xl">→</span>
+        </button>
       </footer>
     </div>
   );
