@@ -1,29 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { error } from "console";
+import { useEffect, useState } from "react";
 
 export default function WaitlistPage() {
   const [waitlistCount, setWaitlistCount] = useState(0); // State to track waitlist count
   const [isAnimating, setIsAnimating] = useState(false); // Animation state
 
-  // ROI Calculator state
   const [investment, setInvestment] = useState(5000); // Default investment amount
   const profitRange = {
     min: (investment * 7) / 100, // 7% profit
     max: (investment * 12) / 100, // 12% profit
   };
 
-  const handleJoinWaitlist = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    const fetchWaitlistCount = async () => {
+      try {
+        const res = await fetch ("/api/waitlist");
+        const data = await res.json();
+        setWaitlistCount(data.count);
+      } catch (error) {
+        console.error("Error fetching waitlist count: ", error);
+      }
+    };
+
+    fetchWaitlistCount();
+  }, []);
+
+  const handleJoinWaitlist = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Trigger animation
-    setIsAnimating(true);
+    const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const type = formData.get("type") as string;
 
-    // Simulate adding to the waitlist
-    setTimeout(() => {
-      setWaitlistCount((prevCount) => prevCount + 1); // Increment waitlist count
-      setIsAnimating(false);
-    }, 300); // Match the animation duration
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, type }),
+      });
+
+      if (res.ok) {
+        setWaitlistCount((prevCount) => prevCount + 1);
+      } else {
+        console.error("Failed to add to waitlist");
+      }
+    } catch (error) {
+      console.error("Error submitting waitlist form:", error);
+    }
   };
 
   const scrollToTop = () => {
@@ -112,9 +138,10 @@ export default function WaitlistPage() {
               📄 What is Invoice Discounting?
             </h2>
             <p className="flex-grow">
-              Invoice discounting is a financial solution that allows businesses
-              to receive immediate cash against their unpaid invoices, improving
-              cash flow without waiting for customer payments.
+            Invoice discounting (billdiscounting) is short-term
+            finance for traders wherein they can sell unpaid
+            invoices, due on a future date, to financial institutions
+            in lieu of a commission.
             </p>
           </div>
           {/* Card 2 */}
@@ -123,9 +150,12 @@ export default function WaitlistPage() {
               📉 The Problem
             </h2>
             <p className="flex-grow">
-              Long payment terms and delayed payments create cash flow gaps that
-              can stifle business growth, limit opportunities, and strain
-              supplier relationships.
+            Micro, Small, and Medium Enterprises (MSMEs) face 90–180
+            day payment delays, crippling cash flow and hindering growth.
+            </p>
+            <p>
+            Existing invoice financing options are
+            costly, rigid, and exclude smaller players.
             </p>
           </div>
           {/* Card 3 */}
@@ -133,10 +163,13 @@ export default function WaitlistPage() {
             <h2 className="text-xl font-bold mb-4 flex items-center">
               🤖 Our Solution
             </h2>
-            <p className="flex-grow">
-              InvoiceX provides an AI-powered platform that instantly evaluates
-              and finances invoices, offering competitive rates and a seamless
-              digital experience for businesses of all sizes.
+            <p className="flex-grow text-xs">
+              InvoiceX is a blockchain-based invoice discounting 
+              platform built on the Stellar blockchain. It enables 
+              Small and Medium Enterprises (SMEs) to tokenize their invoices 
+              as unique assets and offer them to retail investors for investment. 
+              The platform provides a transparent and efficient way for SMEs to secure 
+              working capital while offering retail investors an opportunity to earn returns
             </p>
           </div>
         </div>
