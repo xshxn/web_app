@@ -115,20 +115,7 @@ export default function WaitlistPage() {
             </button>
           </form>
         </div>
-
-        {/* Waitlist Count */}
-        <div className="mt-8 text-center">
-          <p className="text-lg text-gray-400 mb-2">Current waitlist count:</p>
-          <div
-            className={`text-4xl font-bold ${
-              isAnimating ? "animate-pulse" : ""
-            }`}
-          >
-            {waitlistCount}
-          </div>
-        </div>
       </div>
-
       {/* Cards Section */}
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -180,7 +167,7 @@ export default function WaitlistPage() {
         <div className="bg-gray-900 p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
           <h2 className="text-2xl font-bold mb-6">📈 Return on Investment Calculator</h2>
           <p className="text-gray-400 mb-4">
-            Calculate your potential returns in 6 months.
+            Calculate your potential returns in 60 days.
           </p>
 
           {/* Investment Input */}
@@ -215,7 +202,7 @@ export default function WaitlistPage() {
               ${profitRange.min.toFixed(2)} - ${profitRange.max.toFixed(2)}
             </p>
             <p className="text-lg text-gray-400 mt-2">
-              in just 6 months.
+              in just 60 days.
             </p>
           </div>
         </div>
